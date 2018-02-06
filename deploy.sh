@@ -14,13 +14,13 @@ show_help() {
     exit 1
 }
 
+MONGO_URI=mongodb://mongo:27017/komoot
+
 while :; do
     case $1 in
         --mongo-uri)
             if [ -n "$2" ]; then
                 MONGO_URI=$2
-            else
-                MONGO_URI=mongodb://mongo:27017/komoot
             fi
             shift
         ;;
@@ -86,6 +86,20 @@ while :; do
     shift
 done
 
+
+check_params() {
+    if [ -z "${SQS_URL}" ] ||
+        [ -z "${SQS_URL}" ] ||
+        [ -z "${SENDER_EMAIL}" ] ||
+        [ -z "${AWS_ACCESS_KEY}" ] ||
+        [ -z "${AWS_SECRET}" ] ||
+        [ -z "${AWS_REGION}" ]; then
+        show_help
+    fi
+}
+
+check_params
+
 echo "Creating AWS Instance ..."
 docker-machine create --driver amazonec2 digest-notifier
 
@@ -103,12 +117,12 @@ docker run -d --network=digest_notifier --name=mongo mongo
 
 echo "Digest notifier is starting ..."
 docker run -d --network=digest_notifier --name=digest-notifier \
-    -e MONGO_URI=$MONGO_URI \
-    -e NOTIFICATION_SQS_URL=$SQS_URL \
-    -e SENDER_EMAIL_ADDRESS=$SENDER_EMAIL \
-    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY \
-    -e AWS_DEFAULT_REGION=$AWS_REGION \
-    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET \
+    -e MONGO_URI=${MONGO_URI} \
+    -e NOTIFICATION_SQS_URL=${SQS_URL} \
+    -e SENDER_EMAIL_ADDRESS=${SENDER_EMAIL} \
+    -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY} \
+    -e AWS_DEFAULT_REGION=${AWS_REGION} \
+    -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET} \
     huseyinbabal/digest-notifier
 
 echo "Application deployment finished. You will get notifications per hour."
