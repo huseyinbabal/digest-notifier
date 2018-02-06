@@ -37,7 +37,7 @@ class Notifier {
 
         sendPromise.then(
             (data) => {
-                console.log(data.MessageId);
+                console.log(`Email sent. ${data.MessageId}`);
             }).catch(
             (err) => {
                 console.error(err, err.stack);
