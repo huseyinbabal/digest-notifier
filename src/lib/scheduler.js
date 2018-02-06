@@ -5,9 +5,12 @@ import Cron from "cron";
 class Scheduler {
     static initialize() {
         const job = new Cron.CronJob({
-            cronTime: '* * * * *',
+            cronTime: '0 * * * *',
             onTick: () => {
                 Notification.aggregate([
+                    {
+                        $match: {createDate: {$gt: new Date(Date.now() - 60 * 60 * 1000)}}
+                    },
                     {
                         $sort: {email: 1, timestamp: -1}
                     },

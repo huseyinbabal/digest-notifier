@@ -12,8 +12,7 @@ class Notifier {
         const params = {
             Destination: {
                 ToAddresses: [
-                    //email,
-                    "huseyin@kloia.com"
+                    email,
                 ]
             },
             Message: {
@@ -31,7 +30,7 @@ class Notifier {
             Source: process.env.SENDER_EMAIL_ADDRESS,
         };
 
-        AWS.config.update({region: 'us-east-1'});
+        AWS.config.update({region: process.env.AWS_DEFAULT_REGION});
 
         const sendPromise = new AWS.SES().sendEmail(params).promise();
 

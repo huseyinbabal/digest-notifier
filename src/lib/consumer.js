@@ -20,7 +20,7 @@ class QueueConsumer {
             console.log(err.message);
         });
 
-        //app.start();
+        app.start();
     }
 }
 

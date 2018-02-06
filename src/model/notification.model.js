@@ -8,7 +8,11 @@ class NotificationSchema extends Schema {
             email: String,
             name: String,
             message: String,
-            timestamp: Date
+            timestamp: Date,
+            createDate: {
+                type: Date,
+                default: Date.now
+            }
         })
     }
 }
